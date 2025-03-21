@@ -1,4 +1,4 @@
-#syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1
 
 # Get base image (official Python image / Alpine version)
 FROM python:3.13-alpine
