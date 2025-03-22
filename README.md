@@ -1,13 +1,15 @@
 # Build and run a Flask application with Docker
 The Python Flask application will print “Hello world!” when accessed via the browser.
 
-# Sections of this README
+# Table of Contents
 [Instructions to build and run the Flask application](#instructions-to-build-and-run-the-flask-application)
   - [Build the Docker image](#build-the-docker-image)
   - [Run the Docker image](#run-the-docker-image)
 
 [Documentation of the steps taken to complete this assignment](#documentation-of-the-steps-taken-to-complete-this-assignment)
   - [Prerequisites](#prerequisites)
+  - [Step 1: Creating the project folder](#step-1-creating-the-project-folder)
+  - 
 
 [Challenges](#challenges)
 
@@ -47,68 +49,104 @@ Example output of `docker ps`.
 CONTAINER ID   IMAGE         COMMAND           CREATED          STATUS         PORTS                    NAMES
 c1392c606dda   flaskapp:v1   "python app.py"   56 minutes ago   Up 7 seconds   0.0.0.0:5000->5000/tcp   competent_ritchie
 ```
-With the container running, you can now visit http://localhost:5000.
-```
-TODO: pic of Hello, world!
-```
+With the container running, you can now visit http://localhost:5000. 
 
+Below is screenshot of the application's output: <br>
+<img src="https://i.imgur.com/gV1d7gz.png" width="400" alt="Screenshot of the Hello world! output in the web browser" >
 ## Documentation of the steps taken to complete this assignment.
 
 ### Prerequisites
 Prior to the start of the assignment, the following tools should be installed onto your machine:
-- Git: For version control
 - Docker: For the containerization of the application
-- Python
-- Flask 
-- pip
-- (Optional) An IDE of your choice. I used Visual Studio Code (VSCode) to complete this assignment 
+- Python: The programming language which Flask was built upon
+- pip: Python's package installer, which will be used to install Flask
+- Flask: The Python-based micro web framework which the app will be created on
+- (Optional) An integrated development environment (IDE) of your choice. I used Visual Studio Code (VSCode) to complete this assignment 
 
 ### Step 1: Creating the project folder
-In VSCode, create a project folder and give it an appropriate name for this project. Example: `docker-flask-app`. 
+Create a project folder and give it an appropriate name for this project. Example: `docker-flask-app`
 
-Within the folder you created, we will start :
-- app.py
-- Dockerfile
-- requirements.txt
-- README.md
-- .gitignore
-  - Added this as the project in VSCode utilized a virtual environment (.venv) to run the python environment, which is for local deployment/testing purposes only.  
-- .dockerignore
+Below is a preview of the completed project folder structure and its files:
+```
+docker-flask-app
+  ├── app.py                  # the python flask application
+  ├── Dockerfile              # contains the set of commands needed to assemble a Docker image
+  ├── requirements.txt        # list of the required dependencies to run the flask app
+  ├── .dockerignore           # tells Docker which files/directories to exclude when building a Docker image
+  ├── .gitignore              # specifies intentionally untracked files that Git should ignore
+  └── README.md
+```
+The following steps in this document will provide guidance on writing the contents of each file, as well as building and running the application with docker.
 
-### Step 2: Configure GitHub for version control of your project
-Now that we have a skeleton of the project and the files, lets create a git repository where we can commit our changes for version control.
-Navigate to your GitHub account (or other remote git repository like GitLab), create a new repository. For consistency purposes, lets name the repository the same name as the project folder (ex. docker-flask-app)
+### Step 2: Create the flask application (creating the app.py)
 
-Open your command line, and configure GitHub 
+In the root level of your project folder, create an `app.py` file with the following code:
+```python
+from flask import Flask
+import os
 
-- On Github, a new repository was created and the remote url was copied.
-- Github user & email was configured via git terminal commands. GitHub access was authorized.
-- In VSCode, used git section to add/stage files, commit with a message, and push to main branch.
+app = Flask(__name__)
 
+@app.route("/")
+def hello():
+    return "Hello, world!"
 
-### Step 3: The first commit of the project
-the project was pushed (initial commit).
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=True,host='0.0.0.0',port=port)
+```
 
+### Step 3 (Optional): Test running app.py
+The flask application can be ran on its own without the need for docker or containers.
 
-### Step 4: Creating the flask application (writing the app.py file)
+In your command line, while under the project folder root, run the following command:
+```
+python -m flask run
+```
+Once the command is executed, the output will show the application is running on http://127.0.0.1:5000
 
-As with most steps hereonout- save, commit (with an appropriate message) and push your changes with git
+If you enter the url into your browser, you should see the webpage generated by the application:<br>
+<img src="https://i.imgur.com/4m4GaKv.png" width="400" alt="Screenshot of the Hello world! output in the web browser" >
 
-### Step 5 (Optional): Test running the app.py
-5. Tested the flask application on its own (no docker, just python and localhost).
-- In terminal, “python -m flask run” was entered.
-- cmd output shows it was running on http://127.0.0.1:5000.
-- visited the url, confirmed it works! Hello world!
+Press CTRL+C to quit running the flask application
 
-### Step 6: Create the Dockerfile
+### Step 4: Create the Dockerfile
+
+In the root level of your project folder, create file named `Dockerfile` with the following content:
+```dockerfile
+# syntax=docker/dockerfile:1
+
+# Get base image (official Python image / Alpine version)
+FROM python:3.13-alpine
+
+# Switch to the working directory
+WORKDIR /app
+
+# Copy the requirements file into the image
+COPY ./requirements.txt /app/requirements.txt
+
+# Install the required dependencies listed from requirements.txt
+RUN pip install -r requirements.txt
+
+# Copy all the files from the current folder to the image (any files/extensions listed in .dockerignore will be excluded)
+COPY . /app
+
+# Expose port 5000
+EXPOSE 5000
+
+# Specifies the starting of the expression to use when starting the container
+ENTRYPOINT ["python"]
+
+# Command to run the flask application
+CMD ["app.py"]
+```
+
 - Used the following documentation to assist in creating the file https://docs.docker.com/reference/dockerfile/
 - Changed build image to use official Python image. This would require less steps to be executed in the Dockerfile when compared to a regular linux/alpine image.
 - Reordered steps so requirements.txt is copied first before being referenced during the pip install command
 
 ### Step 7: Create the .dockerignore file
 - Specified README.md in the dockerignore file as that isn’t required for the image build
-
-- Update the readme.md with the steps you have taken in this section, save your changes, stage and commit your changes to the git repo
 
 ### Step 8. Create the requirements.txt
 - check flask version
@@ -118,7 +156,6 @@ As with most steps hereonout- save, commit (with an appropriate message) and pus
 ```
 pip freeze > requirements.txt
 ```
-
 
 ### Step 9: Build the docker image
 - Double check docker is installed
