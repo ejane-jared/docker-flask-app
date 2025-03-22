@@ -9,7 +9,7 @@ The Python Flask application will print “Hello world!” when accessed via the
 [Documentation of the steps taken to complete this assignment](#documentation-of-the-steps-taken-to-complete-this-assignment)
   - [Prerequisites](#prerequisites)
   - [Step 1: Create the project folder](#step-1-create-the-project-folder)
-  - [Step 2: Create the flask application (Create the app.py file)](#step-2-create-the-flask-application-create-the-apppy-file)
+  - [Step 2: Create the Flask application (Create the app.py file)](#step-2-create-the-flask-application-create-the-apppy-file)
   - [Step 3 (Optional): Test running the Flask application (run app.py)](#step-3-optional-test-running-the-flask-application-run-apppy)
   - [Step 4: Create the Dockerfile](#step-4-create-the-dockerfile)
   - [Step 5: Create the requirements.txt](#step-5-create-the-requirementstxt)
@@ -86,7 +86,7 @@ docker-flask-app
 ```
 The following steps will guide you in creating the key files needed to build and run the Flask application with Docker.
 
-### Step 2: Create the flask application (Create the app.py file)
+### Step 2: Create the Flask application (Create the app.py file)
 
 In the root level of your project folder, create an `app.py` file with the following code:
 ```python
@@ -113,7 +113,7 @@ if __name__ == "__main__":
 `app.run(debug=True, host='0.0.0.0', port=port)` Starts the Flask server and allows the app to be accessible from any IP address, not just localhost. This is useful when running inside a container. The app will run on the specified port (either from the environment variable or defaulting to 5000).
 
 ### Step 3 (Optional): Test running the Flask application (run app.py)
-The Flask application can be ran on its own without the need for docker images or containers.
+The Flask application can be run on its own without the need for docker images or containers.
 
 In your command line, navigate to the root of the project folder, then enter the following command:
 ```
@@ -127,7 +127,7 @@ If you enter the url into your browser, you should see the webpage served by the
 Navigate back to the command line, then press CTRL+C to quit running the Flask application.
 
 ### Step 4: Create the Dockerfile
-A Dockerfile is a text document that contains all the commands a user could call on the command line to assemble a Docker image.
+A Dockerfile is a text document that contains all the commands a user could call on the command line to assemble an image. 
 
 In the root level of your project folder directory, create a file named `Dockerfile` with the following content:
 ```dockerfile
@@ -192,11 +192,11 @@ Example output of the `flask --version` command
 
 <img src="https://i.imgur.com/RCTDBNG.png" width="300" alt="Screenshot of flask --version command line output" >
 
-Based on the output of `flask --version`, update the version number in the requirements.txt (`Flask==[X.X.X]`)
+Based on the output of `flask --version`, update the version number in the requirements.txt (`Flask==#.#.#`)
 
 In the above example command line output, the Flask version is 3.1.0. The following will be the content of the requirements.txt file:
 ```
-Flask==[3.1.0]
+Flask==3.1.0
 ```
 
 >Alternatively, you can run the command `pip freeze > requirements.txt` while in the root of the project directory.
@@ -218,7 +218,7 @@ __pycache__
 .vscode/
 ```
 
-Common files in the .dockeringnore could be `*.md`,`.git`,`.gitignore`
+Common files in the .dockerignore could be `*.md`,`.git`,`.gitignore`
 
 The project directory and files should now look like this:
 ```
@@ -303,7 +303,7 @@ Solution:
 Challenge #2: VSCode showed an error with having an empty Dockerfile
 Solution: Added a single line of code to indicate which base image to use for the image (FROM python:3.13-alpine), saved the file and the error went away
 
-Challange #3: Docker daemon not running error in command line
+Challenge #3: Docker daemon not running error in command line
 - On MacOS terminal, I received this error when running the docker build command
   - `Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?`
 Solution:
